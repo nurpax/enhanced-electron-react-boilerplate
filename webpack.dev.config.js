@@ -11,6 +11,7 @@ const OUTPUT_DIR = path.resolve(__dirname, 'dist');
 const defaultInclude = [ SRC_DIR ];
 
 module.exports = {
+  mode: 'development',
   entry: [
     'react-hot-loader/patch', // activate HMR for React
     SRC_DIR + '/index.js' // main entry point for app
@@ -58,7 +59,7 @@ module.exports = {
       chunks: false,
       children: false
     },
-    setup() {
+    before() {
       spawn(
         'electron',
         ['.'],

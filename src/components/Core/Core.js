@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
@@ -6,22 +6,24 @@ import { ConnectedRouter } from 'connected-react-router';
 import { components, history, store } from '../components.js';
 import styles from './component.less';
 
-const Core = () => {
-  return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <div className="window">
-          <div className="window-content">
-            <div className="pane-group">
-              <div className="pane-sm sidebar"><components.Menu /></div>
-              <div className="pane padded"><AppRouter /></div>
+class Core extends PureComponent {
+  render () {
+    return (
+      <Provider store={this.props.store}>
+        <ConnectedRouter history={this.props.history}>
+          <div className="window">
+            <div className="window-content">
+              <div className="pane-group">
+                <div className="pane-sm sidebar"><components.Menu /></div>
+                <div className="pane padded"><AppRouter /></div>
+              </div>
             </div>
+            <components.Footer />
           </div>
-          <components.Footer />
-        </div>
-      </ConnectedRouter>
-    </Provider>
-  );
+        </ConnectedRouter>
+      </Provider>
+    );
+  }
 }
 
 const AppRouter = () => {

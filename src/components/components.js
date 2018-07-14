@@ -3,6 +3,7 @@ import electron from 'electron';
 import { createHashHistory } from 'history';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { createLogger } from 'redux-logger'
 
 // This grabs all 'component.js' files in subdirectories under /components/
 const allComponents = require.context('./', true, /component\.js$/);
@@ -56,10 +57,10 @@ let middlewares = [
 
 // Development adds logging, must be last
 if ( process.env.NODE_ENV !== "production") {
-  middlewares.push( require('redux-logger')({
+  middlewares.push(createLogger({
     // Change this configuration to your liking
     duration: true, collapsed: true
-  }) );
+  }));
 }
 
 // Generate store
