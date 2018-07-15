@@ -27,7 +27,7 @@ allComponents.keys().forEach( ( path ) => {
 reducers = combineReducers( reducers );
 
 // Start history
-const history = createHashHistory({
+const makeHistory = () => createHashHistory({
   // Here we override prompt to use the native electron dialog module, this lets us override the message box title
   getUserConfirmation: (message, callback) => {
     electron.remote.dialog.showMessageBox(
@@ -46,32 +46,36 @@ const history = createHashHistory({
       }
     )
   }
-
-  //callback(window.confirm(message))
 });
 
-// Merge middlewares
-let middlewares = [
-  routerMiddleware(history)
-];
+// Generate store
+const makeStore = (history) => {
+  // Merge middlewares
+  let middlewares = [
+    routerMiddleware(history)
+  ];
 
-// Development adds logging, must be last
-if ( process.env.NODE_ENV !== "production") {
-  middlewares.push(createLogger({
-    // Change this configuration to your liking
-    duration: true, collapsed: true
-  }));
+  // Development adds logging, must be last
+  if ( process.env.NODE_ENV !== "production") {
+    middlewares.push(createLogger({
+      // Change this configuration to your liking
+      duration: true, collapsed: true
+    }));
+  }
+
+  return createStore(
+    connectRouter(history)(reducers),
+    applyMiddleware(...middlewares)
+  );
 }
 
-// Generate store
-const store = createStore(
-  connectRouter(history)(reducers),
-  applyMiddleware(...middlewares)
-);
+const makeReduxComponents = () => {
+  const history = makeHistory()
+  const store = makeStore(history)
+  return { components, history, store }
+}
 
 // Export all the separate modules
 export {
-  components,
-  history,
-  store
+  makeReduxComponents
 };

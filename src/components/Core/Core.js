@@ -3,11 +3,11 @@ import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 
-import { components, history, store } from '../components.js';
 import styles from './component.less';
 
 class Core extends PureComponent {
   render () {
+    const { components } = this.props
     return (
       <Provider store={this.props.store}>
         <ConnectedRouter history={this.props.history}>
@@ -15,7 +15,9 @@ class Core extends PureComponent {
             <div className="window-content">
               <div className="pane-group">
                 <div className="pane-sm sidebar"><components.Menu /></div>
-                <div className="pane padded"><AppRouter /></div>
+                <div className="pane padded">
+                  <AppRouter components={components} />
+                </div>
               </div>
             </div>
             <components.Footer />
@@ -26,7 +28,8 @@ class Core extends PureComponent {
   }
 }
 
-const AppRouter = () => {
+const AppRouter = (props) => {
+  const { components } = props
   return (
     <Switch>
       <Route exact path="/" component={Home} />
